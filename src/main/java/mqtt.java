@@ -39,7 +39,9 @@ public class mqtt {
         System.out.println("The device \"" + device_name + "\" has been registered successfully!");
 
         // listen for operations
-        client.subscribe("s/ds", new IMqttMessageListener() {
+
+//        client.subscribe("s/ds", new IMqttMessageListener() {
+        client.subscribe("s/ds", new MqttClient() {
             public void messageArrived (final String topic, final MqttMessage message) throws Exception {
                 final String payload = new String(message.getPayload());
 
