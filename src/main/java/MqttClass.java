@@ -36,6 +36,9 @@ public class MqttClass implements MqttCallback {
                 // 수신자나 등록 sub dcuNumber에 정보가 들어오면 setCallback
                 client.subscribe("dcuNumber");
 
+                //화면에 뜨는것...? Frame
+                new MyFrame(MqttClass.this);
+                // String Format Data
 
             }
             catch (MqttException e) {
@@ -43,6 +46,11 @@ public class MqttClass implements MqttCallback {
             }
         }
     };
+
+    public void sendMessage(String data) {
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setPayload();
+    }
 
     // MqttCallback (Sub에 들어왔을때 처리하는 것 ) - 메서드 구현
     @Override
