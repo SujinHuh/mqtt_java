@@ -15,6 +15,7 @@ public class MqttClass implements MqttCallback {
 
     }
 
+    private ReceiveEventListner listener = null;
     Runnable task1 = new Runnable() {
         @Override
         public void run() {
@@ -49,7 +50,22 @@ public class MqttClass implements MqttCallback {
 
     public void sendMessage(String data) {
         MqttMessage mqttMessage = new MqttMessage();
-        mqttMessage.setPayload();
+        mqttMessage.setPayload(data.getBytes());// String 바이트로 바꿔서 넣어주어야함
+
+        try{
+            if (client.isConnected()) {
+                client.publish(data.getBytes());// Stirng -> byte
+            }
+        }
+        catch (MqttException e){
+            System.out.println("error1-"+e.getStackTrace());//+e.getMessage());
+        }
+
+    }
+
+    public void setMyEventListner(ReceiveEventListner listener){
+
+        this.listener = listener;
     }
 
     // MqttCallback (Sub에 들어왔을때 처리하는 것 ) - 메서드 구현
@@ -58,10 +74,12 @@ public class MqttClass implements MqttCallback {
 
     }
 
-    // MqttCallback (Sub에 들어왔을때 처리하는 것 ) - 메서드 구현
+    // MqttCallback (Sub에 들어왔을때 처리하는 것 ) - 메서드 구현 //이벤트 읽어서
     @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+    public void messageArrived(String topic, MqttMessage msg) throws Exception {
 
+      //  System.out.println(topic+","+msg.toString());
+        listener.recvMsg(topic, msg);
     }
 
     // MqttCallback (Sub에 들어왔을때 처리하는 것 ) - 메서드 구현
